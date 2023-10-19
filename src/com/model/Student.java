@@ -27,4 +27,30 @@ public class Student {
     public String getId() {
         return id;
     }
+
+    public String getName() {
+        return name;
+    }
+
+    public List<Course> getEnrolledCourses() {
+        return enrolledCourses;
+    }
+
+    public void addEnrolledCourses(Course course){
+        if (!enrolledCourses.contains(course)) {
+            enrolledCourses.add(course);
+        }
+    }
+
+    @Override
+    public String toString() {
+        return "Student{" +
+                "id='" + id + '\'' +
+                ", name='" + name + '\'' +
+                ", email='" + email + '\'' +
+                ", phoneNumber='" + phoneNumber + '\'' +
+                ", average=" + average +
+                ", enrolledCourses=" + enrolledCourses +
+                '}';
+    }
 }

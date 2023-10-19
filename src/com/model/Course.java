@@ -25,4 +25,13 @@ public class Course {
     public int getCredits() {
         return credits;
     }
+
+    @Override
+    public String toString() {
+        return "Course{" +
+                "name='" + name + '\'' +
+                ", code='" + code + '\'' +
+                ", credits=" + credits +
+                '}';
+    }
 }

@@ -1,10 +1,13 @@
+import com.interfaces.TomarInformacion;
+import com.model.Course;
 import com.model.Professor;
+import com.model.Student;
 import com.service.AcademicService;
 
 import java.util.Optional;
 import java.util.Scanner;
 
-public class Main {
+public class Main{
 
     public static void main(String[] args) {
 
@@ -19,15 +22,15 @@ public class Main {
                 case 3 -> registerNewStudent(academicService);
                 case 4 -> enrollStudentToCourse(academicService);
                 case 5 -> findAProfessor(academicService);
-                case 6 -> System.out.println("Selected option 6");
-                case 7 -> System.out.println("Selected option 7");
+                case 6 -> findAStudent(academicService);
+                case 7 -> findACourse(academicService);
             }
             option = showOptionsMenuAndCaptureOption();
         }
     }
 
     private static void findAProfessor(AcademicService academicService) {
-        System.out.println("Enter the id: ");
+        System.out.println("Enter the professor id: ");
         Scanner scanner = new Scanner(System.in);
         String id = scanner.nextLine();
         Optional<Professor> professorOptional = academicService.findProfessorById(id);
@@ -38,16 +41,79 @@ public class Main {
         }
     }
 
-    private static void enrollStudentToCourse(AcademicService academicService) {
-
+    private static void findAStudent(AcademicService academicService) {
+        System.out.println("Enter the Student id: ");
+        Scanner scanner = new Scanner(System.in);
+        String id = scanner.nextLine();
+        Optional<Student> studentOptional = academicService.findStudentById(id);
+        if (studentOptional.isPresent()) {
+            System.out.println(studentOptional.get());
+        } else {
+            System.out.println("Student with id: " + id + " not found");
+        }
     }
 
+    private static void findACourse(AcademicService academicService) {
+        System.out.println("Enter the Course code: ");
+        Scanner scanner = new Scanner(System.in);
+        String code = scanner.nextLine();
+        Optional<Course> courseOptional = academicService.findCourseByCode(code);
+        if (courseOptional.isPresent()) {
+            System.out.println(courseOptional.get());
+        } else {
+            System.out.println("Course with Code: " + code + " not found");
+        }
+    }
+
+    private static void enrollStudentToCourse(AcademicService academicService) {
+        Scanner scanner = new Scanner(System.in);
+        System.out.println("Enter the Student id");
+        String studenId = scanner.nextLine();
+        System.out.println("Enter the Course code");
+        String courseCode = scanner.nextLine();
+
+        Optional<Student> studentOptional = academicService.findStudentById(studenId);
+
+        Optional<Course> courseOptional = academicService.findCourseByCode(courseCode);
+
+        if (studentOptional.isPresent() && courseOptional.isPresent()){
+            Student student = studentOptional.get();
+            Course course = courseOptional.get();
+            if (!student.getEnrolledCourses().contains(course)){
+                student.addEnrolledCourses(course);
+                System.out.println("Enrollment successful: Student " + student.getName() + " enrolled in course " + course.getName());
+            }else
+                System.out.println("Student is already enrolled in the course.");
+        }else System.out.println("Student or course not found. Enrollment failed.");
+    }
+
+
     private static void registerNewStudent(AcademicService academicService) {
+        Scanner scanner = new Scanner(System.in);
+        System.out.println("Enter the id: ");
+        String id = scanner.nextLine();
+        System.out.println("Enter the name: ");
+        String name = scanner.nextLine();
+        System.out.println("Enter the email: ");
+        String email = scanner.nextLine();
+        System.out.println("Enter the phone number: ");
+        String phoneNumber = scanner.nextLine();
+        Student student = new Student(id, name, email, phoneNumber);
+        academicService.addStudent(student);
+
 
     }
 
     private static void registerNewCourse(AcademicService academicService) {
-
+        Scanner scanner = new Scanner(System.in);
+        System.out.println("Enter the name: ");
+        String name = scanner.nextLine();
+        System.out.println("Enter the code: ");
+        String code = scanner.nextLine();
+        System.out.println("Enter the credits: ");
+        Integer credits = scanner.nextInt();
+        Course course = new Course(name, code, credits);
+        academicService.addCourse(course);
     }
 
     private static void registerNewProfessor(AcademicService academicService) {
